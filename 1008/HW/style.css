@@ -1,0 +1,176 @@
+/* 把預設邊距、內距都清掉，保證版面乾淨整齊 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 背景弄個漂亮一點的漸層，提升質感～ */
+body {
+  font-family: "微軟正黑體", "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);  /* 改1 */
+  padding: 20px;
+  line-height: 1.8;
+}
+
+/* 外層容器，控制整體寬度和置中排版 */
+.container {
+  max-width: 1000px; /* 改6 */
+  margin: 0 auto;
+  background-color: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* 主標題 h1，用紅色強調一下，加粗加大 */
+h1 {
+  color: #e74c3c;     /* 改2 */
+  text-align: center;
+  font-size: 3em;     /* 改3 */
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 4px solid #e74c3c;
+}
+
+/* 每個區塊的外框設定，加點 padding 和圓角 */
+.section {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* 滑鼠移上區塊會有點浮起來的感覺，增加互動性（改8） */
+.section:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* 小標題 h2，綠色的，看起來比較清新 */
+h2 {
+  color: #2ecc71;     /* 改4 */
+  font-size: 2em;     /* 改5 */
+  margin-bottom: 15px;
+  padding-left: 15px;
+  border-left: 5px solid #2ecc71;
+}
+
+/* 段落的文字排版和顏色調整 */
+p {
+  color: #444;
+  margin: 10px 0;
+  padding-left: 15px;
+}
+
+/* 強調文字（例如名字），讓它更顯眼 */
+strong {
+  color: #e74c3c;
+  font-size: 1.1em;
+}
+
+/* 取消列表預設的點點，自己設計一個漂亮的符號 */
+ul {
+  list-style: none;
+  padding-left: 15px;
+}
+
+li {
+  color: #333;
+  margin: 10px 0;
+  padding-left: 30px;
+  position: relative;
+}
+
+/* 自定義列表前面的符號，用星星看起來可愛一點（改9） */
+li::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  color: #e67e22;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* 表格整體設定：合併邊框、白底、圓角 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* 表格標題列，用紅色底 + 白字做區隔（改7） */
+th {
+  background-color: #e74c3c;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 1.1em;
+}
+
+/* 表格內容的樣式，顏色柔和一點 */
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #555;
+}
+
+/* 最後一列不要底線 */
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* 滑鼠移到某列時，背景會變色，提示使用者可互動 */
+tr:hover {
+  background-color: #f0f0ff;
+}
+
+/* 超連結樣式：橘色，滑過時會變深（改10） */
+a {
+  color: #e67e22;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: #d35400;
+}
+
+/* 加一條超連結底線動畫，滑過時才出現 */
+a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #d35400;
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* 圓形照片樣式：有邊框、陰影，滑過時放大一點 */
+.profile-img {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 20px auto;
+  border: 5px solid #e74c3c;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+  transform: scale(1.05);
+}
