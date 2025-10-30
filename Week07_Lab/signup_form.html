@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Week07 Lab — Signup</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container col-md-6">
+    <h3 class="mb-3">會員註冊表單（Week07 Lab）</h3>
+    <form id="signup-form" novalidate>
+      <div class="mb-3">
+        <label for="name" class="form-label">姓名</label>
+        <input id="name" name="name" class="form-control" required aria-describedby="name-error">
+        <p id="name-error" class="form-text text-danger" aria-live="polite"></p>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" name="email" class="form-control" type="email" required aria-describedby="email-error">
+        <p id="email-error" class="form-text text-danger" aria-live="polite"></p>
+      </div>
+
+      <div class="mb-3">
+        <label for="mobile" class="form-label">手機（10 碼）</label>
+        <input id="mobile" name="mobile" class="form-control" inputmode="numeric" required aria-describedby="mobile-error" placeholder="0912345678" pattern="^\d{10}$">
+        <p id="mobile-error" class="form-text text-danger" aria-live="polite"></p>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">密碼（至少 8 碼，英數混合）</label>
+        <input id="password" name="password" class="form-control" type="password" required aria-describedby="password-error password-strength">
+        <p id="password-error" class="form-text text-danger" aria-live="polite"></p>
+
+        <div id="password-strength" class="mt-2">
+          <div class="strength-bar bg-light"><div class="strength-fill"></div></div>
+          <div id="password-strength-text" class="small text-muted mt-1">強度： -</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirm" class="form-label">確認密碼</label>
+        <input id="confirm" name="confirm" class="form-control" type="password" required aria-describedby="confirm-error">
+        <p id="confirm-error" class="form-text text-danger" aria-live="polite"></p>
+      </div>
+
+      <fieldset class="mb-3">
+        <legend class="form-label">興趣（至少選 1）</legend>
+        <div id="interests" class="d-flex gap-2 flex-wrap" role="group" aria-describedby="interests-error">
+          <label class="btn btn-outline-secondary btn-sm">
+            <input type="checkbox" name="interest" value="music" class="d-none"> 音樂
+          </label>
+          <label class="btn btn-outline-secondary btn-sm">
+            <input type="checkbox" name="interest" value="movie" class="d-none"> 電影
+          </label>
+          <label class="btn btn-outline-secondary btn-sm">
+            <input type="checkbox" name="interest" value="sports" class="d-none"> 運動
+          </label>
+          <label class="btn btn-outline-secondary btn-sm">
+            <input type="checkbox" name="interest" value="coding" class="d-none"> 程式
+          </label>
+        </div>
+        <p id="interests-error" class="form-text text-danger" aria-live="polite"></p>
+      </fieldset>
+
+      <div class="form-check mb-3">
+        <input id="agree" type="checkbox" class="form-check-input" required aria-describedby="agree-error">
+        <label class="form-check-label" for="agree">我同意服務條款（必填）</label>
+        <p id="agree-error" class="form-text text-danger" aria-live="polite"></p>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button id="submit-btn" type="submit" class="btn btn-primary">註冊</button>
+        <button id="reset-btn" type="button" class="btn btn-secondary">重設</button>
+        <div class="ms-auto align-self-center text-muted small">儲存於 localStorage（尚未送出）</div>
+      </div>
+    </form>
+  </div>
+
+  <script src="signup_form.js"></script>
+</body>
+</html>

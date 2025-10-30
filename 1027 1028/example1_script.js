@@ -26,7 +26,6 @@ form.addEventListener('submit', (event) => {
   input.focus();
 });
 
-// 事件委派：處理完成 / 刪除
 list.addEventListener('click', (event) => {
   const btn = event.target.closest('button[data-action]');
   if (!btn) return;
@@ -41,7 +40,7 @@ list.addEventListener('click', (event) => {
 
   if (action === 'toggle') {
     const done = item.classList.toggle('list-group-item-success');
-    // 切換按鈕文字與樣式，讓狀態更明顯
+    // 切換按鈕文字與樣式
     btn.textContent = done ? '取消' : '完成';
     if (done) {
       btn.classList.remove('btn-outline-success');
@@ -56,7 +55,6 @@ list.addEventListener('click', (event) => {
 // 監聽 input 的 keyup，按 Enter 送出表單
 input.addEventListener('keyup', (e) => {
   if (e.key === 'Enter') {
-    // 以 dispatchEvent 觸發 submit 事件，會走到上面的 submit handler
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   }
 });
