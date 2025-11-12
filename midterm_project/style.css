@@ -1,0 +1,85 @@
+:root {
+  --brand:#6c5ce7;      /* 主色 */
+  --brand-2:#00cec9;    /* 輔色 */
+}
+
+html,body{
+  font-family:"Noto Sans TC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+
+/* 深色主題 */
+:root[data-theme="dark"]{ color-scheme: dark; }
+
+:root[data-theme="dark"] body{
+  background-color:#121212;
+  color:#fff;
+}
+
+/* 導覽列 / 背景區塊在深色變白字 */
+:root[data-theme="dark"] .bg-body,
+:root[data-theme="dark"] .navbar,
+:root[data-theme="dark"] .navbar-brand,
+:root[data-theme="dark"] .nav-link,
+:root[data-theme="dark"] footer{
+  background-color:#1e1e1e !important;
+  color:#fff !important;
+}
+
+/* 漢堡按鈕在深色模式可見 */
+:root[data-theme="dark"] .navbar .navbar-toggler{ border-color:#fff; }
+:root[data-theme="dark"] .navbar .navbar-toggler-icon{ filter: invert(1); }
+
+/* 導覽列 hover 色 */
+:root[data-theme="dark"] .nav-link:hover{
+  color:var(--brand-2) !important;
+}
+
+/* 卡片樣式 */
+.card {
+  transition: transform .2s ease, box-shadow .2s ease;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.1);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1rem 2rem rgba(0,0,0,.15);
+}
+
+/* ✅ 統一圖片大小與裁切比例（不含淡入淡出） */
+.card-img-top {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;        /* 保持比例並裁切 */
+  object-position: center;  /* 置中裁切 */
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+}
+
+/* 手機版圖片略矮 */
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 180px;
+  }
+}
+
+/* 小徽章 */
+.badge-soft{
+  background: color-mix(in oklab, var(--brand) 15%, transparent);
+  color: var(--brand);
+}
+
+/* 表單驗證紅框 */
+.was-validated .form-control:invalid,
+.form-control.is-invalid{ border-color:#dc3545; }
+
+/* 切換深/淺模式的平滑過渡 */
+html, body, .navbar, .card, .modal-content, .bg-body, footer,
+.form-control, .form-select, .nav-link, .navbar-brand {
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+}
+
+/* 輔助：滑順過場 */
+*{ scroll-behavior: smooth; }
+
+
