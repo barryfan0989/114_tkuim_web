@@ -1,0 +1,22 @@
+### 健康檢查
+GET http://localhost:3001/health
+
+### 建立報名
+POST http://localhost:3001/api/signup
+Content-Type: application/json
+
+{
+  "name": "REST Client",
+  "email": "rest@example.com",
+  "phone": "0912345678",
+  "password": "restPass88",
+  "confirmPassword": "restPass88",
+  "interests": ["全端"],
+  "terms": true
+}
+
+### 查看清單
+GET http://localhost:3001/api/signup
+
+### 刪除（範例：替換 :id）
+DELETE http://localhost:3001/api/signup/:id
