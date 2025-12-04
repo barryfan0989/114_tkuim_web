@@ -1,0 +1,102 @@
+@baseUrl = http://localhost:3001
+@lastId = 
+
+### 健康檢查
+GET {{baseUrl}}/health
+
+### 建立報名（成功）
+POST {{baseUrl}}/api/signup
+Content-Type: application/json
+
+{
+  "name": "新同學 A",
+  "email": "new-a@example.com",
+  "phone": "0911222333",
+  "interests": ["前端", "設計"],
+  "status": "pending"
+}
+
+### 建立報名（重複 Email）
+POST {{baseUrl}}/api/signup
+Content-Type: application/json
+
+{
+  "name": "新同學 B",
+  "email": "new-a@example.com",
+  "phone": "0911999999"
+}
+
+### 建立報名（Email 格式錯誤）
+POST {{baseUrl}}/api/signup
+Content-Type: application/json
+
+{
+  "name": "測試",
+  "email": "invalid-email",
+  "phone": "123"
+}
+
+### 建立報名（缺少必填欄位）
+POST {{baseUrl}}/api/signup
+Content-Type: application/json
+
+{
+  "name": "測試"
+}
+
+### 取得所有報名（第一頁）
+GET {{baseUrl}}/api/signup
+
+### 取得所有報名（分頁：第 2 頁，每頁 5 筆）
+GET {{baseUrl}}/api/signup?page=2&limit=5
+
+### 取得所有報名（無效分頁參數）
+GET {{baseUrl}}/api/signup?page=-1&limit=0
+
+### 取得單筆報名
+GET {{baseUrl}}/api/signup/{{lastId}}
+
+### 取得不存在的報名
+GET {{baseUrl}}/api/signup/000000000000000000000000
+
+### 更新報名（更新 phone）
+PATCH {{baseUrl}}/api/signup/{{lastId}}
+Content-Type: application/json
+
+{
+  "phone": "0988111222"
+}
+
+### 更新報名（更新 status）
+PATCH {{baseUrl}}/api/signup/{{lastId}}
+Content-Type: application/json
+
+{
+  "status": "approved"
+}
+
+### 更新報名（更新多個欄位）
+PATCH {{baseUrl}}/api/signup/{{lastId}}
+Content-Type: application/json
+
+{
+  "phone": "0999999999",
+  "interests": ["全端", "DevOps"],
+  "status": "approved"
+}
+
+### 更新報名（沒有欄位）
+PATCH {{baseUrl}}/api/signup/{{lastId}}
+Content-Type: application/json
+
+{
+}
+
+### 刪除報名
+DELETE {{baseUrl}}/api/signup/{{lastId}}
+
+### 刪除不存在的報名
+DELETE {{baseUrl}}/api/signup/000000000000000000000000
+
+### 測試 404
+GET {{baseUrl}}/api/nonexistent
