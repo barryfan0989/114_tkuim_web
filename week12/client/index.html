@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week12 - 報名系統（含權限管理）</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-content h1 {
+      font-size: 24px;
+      color: #667eea;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-info {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .user-info .name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .user-info .role {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .auth-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+
+    .btn-small:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
+
+    .btn-small.logout {
+      background: #dc3545;
+    }
+
+    .btn-small.logout:hover {
+      background: #c82333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 20px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn-delete:hover:not(:disabled) {
+      background: #c82333;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 13px;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+
+    .alert.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+
+    .alert.warning {
+      background: #ffe;
+      color: #a90;
+      border: 1px solid #ffc;
+    }
+
+    .data-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .data-item {
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 15px;
+      background: #fafafa;
+      transition: all 0.3s;
+    }
+
+    .data-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .data-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .data-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+
+    .data-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #667eea;
+      color: white;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .data-fields {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .data-field {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .data-field-label {
+      color: #999;
+      min-width: 70px;
+      font-weight: 500;
+    }
+
+    .data-field-value {
+      color: #555;
+      flex: 1;
+      word-break: break-all;
+    }
+
+    .data-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+    }
+
+    .modal-buttons .btn-cancel {
+      background: #999;
+    }
+
+    .modal-buttons .btn-cancel:hover {
+      background: #777;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .user-section {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .data-header {
+        flex-direction: column;
+      }
+
+      .data-actions {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <h1>📋 Week12 報名系統</h1>
+      <div class="user-section">
+        <div class="user-info" id="userInfo" style="display: none;">
+          <div class="name" id="userName"></div>
+          <div class="role" id="userRole"></div>
+        </div>
+        <div class="auth-links">
+          <a href="login.html" class="btn-small" id="loginLink">登入</a>
+          <button class="btn-small logout" id="logoutBtn" style="display: none;">登出</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- 未登入提示 -->
+    <div class="alert warning" id="notLoggedInAlert">
+      ⚠️ 您尚未登入。請<a href="login.html" style="color: inherit; font-weight: 600;">登入或註冊</a>以使用報名系統。
+    </div>
+
+    <!-- 系統提示 -->
+    <div class="alert" id="systemAlert"></div>
+
+    <!-- 報名表單 -->
+    <div class="card" id="formCard" style="display: none;">
+      <h2>新增報名</h2>
+      <form id="signupForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">姓名 *</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">電話 *</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="interests">興趣領域</label>
+            <input type="text" id="interests" name="interests" placeholder="用逗號分隔，如：前端,後端">
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn">送出報名</button>
+      </form>
+    </div>
+
+    <!-- 報名列表 -->
+    <div class="card" id="listCard" style="display: none;">
+      <h2>報名資料列表</h2>
+      
+      <div id="dataList" class="data-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">📭</div>
+          <p>沒有報名資料</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 刪除確認 Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-header">確認刪除？</div>
+      <p>此操作無法復原。</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" id="cancelDeleteBtn">取消</button>
+        <button class="btn-delete" id="confirmDeleteBtn">確認刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="signup_form.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+### Week12 API 測試指南
+
+## 測試帳號
+- **Admin**: admin@example.com / test1234
+- **Student1**: student1@example.com / test1234
+- **Student2**: student2@example.com / test1234
+
+## 1. 登入流程
+
+### 未登入狀態 - 查詢報名資料（應被拒）
+```http
+GET http://localhost:3001/api/signup
+Content-Type: application/json
+```
+預期回應: 401 Unauthorized
+
+### 登入（取得 Token）
+```http
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "student1@example.com",
+  "password": "test1234"
+}
+```
+預期回應: 200 OK，取得 token
+
+### 使用 Token 查詢自己的資料（學生）
+```http
+GET http://localhost:3001/api/signup
+Content-Type: application/json
+Authorization: Bearer {your_token_here}
+```
+預期回應: 200 OK，只顯示自己的報名資料
+
+### 使用 Token 查詢全部資料（管理員）
+```http
+GET http://localhost:3001/api/signup
+Content-Type: application/json
+Authorization: Bearer {admin_token_here}
+```
+預期回應: 200 OK，顯示所有報名資料
+
+## 2. 註冊流程
+
+### 新使用者註冊
+```http
+POST http://localhost:3001/auth/signup
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "test1234",
+  "name": "新使用者"
+}
+```
+預期回應: 201 Created，自動登入
+
+### 重複註冊（應被拒）
+```http
+POST http://localhost:3001/auth/signup
+Content-Type: application/json
+
+{
+  "email": "student1@example.com",
+  "password": "test1234"
+}
+```
+預期回應: 409 Conflict，Email 已被註冊
+
+## 3. 報名 CRUD
+
+### 新增報名（已登入）
+```http
+POST http://localhost:3001/api/signup
+Content-Type: application/json
+Authorization: Bearer {your_token_here}
+
+{
+  "name": "小明 Week12",
+  "email": "student12@example.com",
+  "phone": "0912345678",
+  "interests": ["前端", "後端"]
+}
+```
+預期回應: 201 Created
+
+### 查詢報名資料（含權限檢查）
+
+#### Student 查詢自己的資料
+```http
+GET http://localhost:3001/api/signup
+Authorization: Bearer {student_token}
+```
+預期回應: 200 OK，只顯示自己的資料
+
+#### Admin 查詢全部資料
+```http
+GET http://localhost:3001/api/signup
+Authorization: Bearer {admin_token}
+```
+預期回應: 200 OK，顯示所有資料
+
+### 刪除報名資料
+
+#### Student 刪除自己的資料（成功）
+```http
+DELETE http://localhost:3001/api/signup/{id}
+Authorization: Bearer {student_token}
+```
+預期回應: 200 OK
+
+#### Student 刪除他人的資料（被拒）
+```http
+DELETE http://localhost:3001/api/signup/{other_user_id}
+Authorization: Bearer {student_token}
+```
+預期回應: 403 Forbidden，權限不足
+
+#### Admin 刪除任何人的資料（成功）
+```http
+DELETE http://localhost:3001/api/signup/{any_id}
+Authorization: Bearer {admin_token}
+```
+預期回應: 200 OK
+
+## 4. 權限檢查情境
+
+### 場景 A: Token 過期或無效
+```http
+GET http://localhost:3001/api/signup
+Authorization: Bearer invalid_token
+```
+預期回應: 401 Unauthorized，Token 無效或已過期
+
+### 場景 B: 資料不存在
+```http
+GET http://localhost:3001/api/signup/invalid_id
+Authorization: Bearer {token}
+```
+預期回應: 404 Not Found
+
+## 5. 前端整合測試
+
+1. 打開 http://localhost:5500 (or your local server)
+2. 點擊「登入」連結
+3. 輸入測試帳號登入
+4. 返回報名系統，應該能看到自己的資料
+5. 新增報名資料
+6. Admin 可看全部，Student 只能看自己的
+7. 刪除時應有確認視窗
+8. 登出後重新登入

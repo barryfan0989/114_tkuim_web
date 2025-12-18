@@ -1,0 +1,29 @@
+{
+  "name": "week12-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Week12 Authentication & Authorization Server",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "5.1.0",
+    "cors": "2.8.5",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "jsonwebtoken": "9.0.0",
+    "mongodb": "5.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "vitest": "^1.0.4",
+    "supertest": "^6.3.3",
+    "mongodb-memory-server": "^9.1.6"
+  }
+}

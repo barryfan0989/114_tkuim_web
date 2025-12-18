@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week12 - 登入系統</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+      max-width: 1200px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .card h2 {
+      margin-bottom: 30px;
+      color: #333;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover:not(:disabled) {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+
+    .alert.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+    }
+
+    .info {
+      background: #f0f4ff;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 4px solid #667eea;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .status {
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .status-item {
+      margin: 5px 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .status-item strong {
+      color: #333;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .logout-btn {
+      background: #dc3545;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background: #c82333;
+    }
+
+    .nav {
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-block;
+      padding: 5px 10px;
+    }
+
+    .nav a:hover {
+      opacity: 0.8;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 認證區塊 -->
+    <div class="card" id="authCard">
+      <h2>帳號管理</h2>
+      <div class="nav">
+        <a href="index.html">← 返回報名系統</a>
+      </div>
+      <div id="authStatus" class="status" style="display: none;"></div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="login">登入</button>
+        <button class="tab-btn" data-tab="signup">註冊</button>
+      </div>
+
+      <!-- 登入表單 -->
+      <div class="tab-content active" id="login-tab">
+        <div id="loginAlert" class="alert"></div>
+
+        <div class="info">
+          <strong>測試帳號：</strong><br>
+          帳號: admin@example.com<br>
+          帳號: student1@example.com<br>
+          密碼: test1234
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input 
+              type="email" 
+              id="loginEmail" 
+              name="email" 
+              placeholder="輸入 Email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">密碼</label>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              name="password" 
+              placeholder="輸入密碼"
+              required
+            >
+          </div>
+
+          <button type="submit" id="loginBtn">登入</button>
+        </form>
+      </div>
+
+      <!-- 註冊表單 -->
+      <div class="tab-content" id="signup-tab">
+        <div id="signupAlert" class="alert"></div>
+
+        <div class="info">
+          新使用者可在此建立帳號。<br>
+          密碼最少 6 個字符。
+        </div>
+
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signupName">使用者名稱（選填）</label>
+            <input 
+              type="text" 
+              id="signupName" 
+              name="name" 
+              placeholder="輸入名稱"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input 
+              type="email" 
+              id="signupEmail" 
+              name="email" 
+              placeholder="輸入 Email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">密碼</label>
+            <input 
+              type="password" 
+              id="signupPassword" 
+              name="password" 
+              placeholder="至少 6 個字符"
+              minlength="6"
+              required
+            >
+          </div>
+
+          <button type="submit" id="signupBtn">註冊</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 使用者狀態區塊 -->
+    <div class="card" id="userCard" style="display: none;">
+      <h2>使用者資訊</h2>
+      <div class="nav">
+        <a href="index.html">→ 前往報名系統</a>
+      </div>
+      <div id="userInfo" class="status"></div>
+      <button class="logout-btn" id="logoutBtn">登出</button>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
