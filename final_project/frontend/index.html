@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的任務 - 任務管理系統</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 導覽列 -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <h1 class="logo">📝 任務管理系統</h1>
+        <div class="user-section">
+          <span class="user-name" id="userName">載入中...</span>
+          <button class="btn btn-sm btn-secondary" id="logoutBtn">登出</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- 統計卡片 -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-content">
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">全部任務</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-content">
+            <div class="stat-value" id="statTodo">0</div>
+            <div class="stat-label">待處理</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔄</div>
+          <div class="stat-content">
+            <div class="stat-value" id="statInProgress">0</div>
+            <div class="stat-label">進行中</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-value" id="statCompleted">0</div>
+            <div class="stat-label">已完成</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 控制面板 -->
+      <div class="control-panel">
+        <div class="filters">
+          <select id="filterStatus" class="filter-select">
+            <option value="">所有狀態</option>
+            <option value="todo">待處理</option>
+            <option value="inProgress">進行中</option>
+            <option value="completed">已完成</option>
+          </select>
+
+          <select id="filterPriority" class="filter-select">
+            <option value="">所有優先級</option>
+            <option value="low">低</option>
+            <option value="medium">中</option>
+            <option value="high">高</option>
+          </select>
+
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="🔍 搜尋任務..."
+          >
+        </div>
+
+        <button class="btn btn-primary" id="addTaskBtn">
+          ➕ 新增任務
+        </button>
+      </div>
+
+      <!-- 任務列表 -->
+      <div class="tasks-container">
+        <div id="tasksList" class="tasks-list">
+          <!-- 任務項目將由 JavaScript 動態生成 -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <div class="empty-icon">📭</div>
+          <h3>沒有任務</h3>
+          <p>點擊「新增任務」按鈕建立您的第一個任務</p>
+        </div>
+
+        <div id="loadingState" class="loading-state">
+          <div class="spinner"></div>
+          <p>載入中...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 新增/編輯任務 Modal -->
+  <div id="taskModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">新增任務</h2>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+
+      <form id="taskForm" class="task-form">
+        <input type="hidden" id="taskId">
+
+        <div class="form-group">
+          <label for="taskTitle">任務標題 *</label>
+          <input 
+            type="text" 
+            id="taskTitle" 
+            name="title" 
+            required 
+            placeholder="輸入任務標題"
+            maxlength="100"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="taskDescription">任務描述</label>
+          <textarea 
+            id="taskDescription" 
+            name="description" 
+            rows="4" 
+            placeholder="輸入任務描述（選填）"
+            maxlength="500"
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="taskStatus">狀態</label>
+            <select id="taskStatus" name="status">
+              <option value="todo">待處理</option>
+              <option value="inProgress">進行中</option>
+              <option value="completed">已完成</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="taskPriority">優先級</label>
+            <select id="taskPriority" name="priority">
+              <option value="low">低</option>
+              <option value="medium">中</option>
+              <option value="high">高</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taskDueDate">截止日期</label>
+          <input 
+            type="datetime-local" 
+            id="taskDueDate" 
+            name="dueDate"
+          >
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">取消</button>
+          <button type="submit" class="btn btn-primary" id="saveTaskBtn">儲存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 確認刪除 Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h2>確認刪除</h2>
+        <button class="modal-close" id="closeDeleteModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>確定要刪除此任務嗎？此操作無法復原。</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">取消</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">確認刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

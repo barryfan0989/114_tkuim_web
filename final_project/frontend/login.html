@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登入 - 任務管理系統</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>📝 任務管理系統</h1>
+        <p>Task Management System</p>
+      </div>
+
+      <div id="alertMessage" class="alert" style="display: none;"></div>
+
+      <form id="loginForm" class="auth-form">
+        <h2>登入</h2>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required 
+            placeholder="請輸入您的 Email"
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password">密碼</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            required 
+            placeholder="請輸入密碼"
+            autocomplete="current-password"
+            minlength="6"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          登入
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>還沒有帳號？ <a href="register.html">立即註冊</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
